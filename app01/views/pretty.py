@@ -10,6 +10,8 @@ def pretty_list(request):
     search_data = request.GET.get('q',"")
     if search_data:
         data_dict['mobile__contains'] = search_data
+
+
     queryset = models.PrettyNum.objects.filter(**data_dict).order_by('-level')
 
     page_object = Pagination(request, queryset)

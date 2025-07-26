@@ -40,3 +40,43 @@ class Admin(models.Model):
     """ 管理员 """
     username = models.CharField(verbose_name="用户名", max_length=32)
     password = models.CharField(verbose_name="密码", max_length=64)
+
+    def __str__(self):
+        return self.username
+
+class Task(models.Model):
+    """ 任务 """
+    level_choices = (
+        (1, '紧急'),
+        (2, '重要'),
+        (3, '临时'),
+    )
+    title = models.CharField(verbose_name="标题", max_length=64)
+    level = models.SmallIntegerField(verbose_name="级别", choices=level_choices, default=1)
+    detail = models.TextField(verbose_name="详细信息")
+    user = models.ForeignKey(verbose_name="负责人", to='Admin', on_delete=models.CASCADE)
+
+class Order(models.Model):
+    """ 订单 """
+    oid = models.CharField(verbose_name="订单号", max_length=64)
+    title = models.CharField(verbose_name="名称", max_length=32)
+    price = models.IntegerField(verbose_name="价格")
+    status_choices = (
+        (1, '待支付'),
+        (2, '已支付'),
+    )
+    status = models.SmallIntegerField(verbose_name="状态", choices=status_choices, default=1)
+    admin = models.ForeignKey(verbose_name="管理员", to='Admin', on_delete=models.CASCADE)
+
+class Boss(models.Model):
+    """ 老板 """
+    name = models.CharField(verbose_name="姓名", max_length=32)
+    age = models.IntegerField(verbose_name="年龄")
+    img = models.CharField(verbose_name="头像", max_length=128)
+
+class City(models.Model):
+    """ 城市 """
+    name = models.CharField(verbose_name="名称", max_length=32)
+    count = models.IntegerField(verbose_name="人口")
+    #本质上也是CharField,自动保存数据
+    img = models.FileField(verbose_name="Logo", max_length=128, upload_to="city/")
